@@ -1,0 +1,186 @@
+{
+  "brand_identity": {
+    "name": "TIVROX",
+    "tone": "Professional, Scalable, Trustworthy, Innovative, Clean, High-Impact",
+    "archetype": "The Performance Pro",
+    "core_philosophy": "Digital Systems That Scale. No Clutter, Just Results.",
+    "visual_mood": "Swiss Minimalist meets Modern SaaS. High contrast, purposeful white space, electric blue accents."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "display": "text-5xl md:text-7xl lg:text-8xl tracking-tighter font-bold",
+      "h1": "text-4xl md:text-5xl lg:text-6xl tracking-tight font-bold",
+      "h2": "text-3xl md:text-4xl tracking-tight font-semibold",
+      "h3": "text-2xl md:text-3xl tracking-tight font-semibold",
+      "body_lg": "text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-300",
+      "body": "text-base leading-relaxed text-slate-600 dark:text-slate-400",
+      "caption": "text-sm font-medium tracking-wide uppercase text-slate-500"
+    },
+    "imports": [
+      "@fontsource/manrope/400.css",
+      "@fontsource/manrope/600.css",
+      "@fontsource/manrope/800.css",
+      "@fontsource/inter/400.css",
+      "@fontsource/inter/500.css",
+      "@fontsource/inter/600.css"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#2563EB",
+        "hover": "#1D4ED8",
+        "foreground": "#FFFFFF"
+      },
+      "secondary": {
+        "DEFAULT": "#F1F5F9",
+        "foreground": "#0F172A"
+      },
+      "background": {
+        "light": "#FFFFFF",
+        "dark": "#020617",
+        "subtle": "#F8FAFC"
+      },
+      "surface": {
+        "light": "#FFFFFF",
+        "dark": "#0F172A"
+      },
+      "accent": {
+        "DEFAULT": "#3B82F6",
+        "foreground": "#FFFFFF"
+      },
+      "muted": {
+        "DEFAULT": "#F1F5F9",
+        "foreground": "#64748B"
+      },
+      "border": {
+        "light": "#E2E8F0",
+        "dark": "#1E293B"
+      }
+    },
+    "gradients": {
+      "hero_glow": "radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 50%)",
+      "glass": "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%)"
+    }
+  },
+  "layout_strategy": {
+    "container": "container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl",
+    "spacing": {
+      "section_y": "py-20 md:py-32",
+      "element_gap": "gap-6 md:gap-8 lg:gap-12"
+    },
+    "grids": {
+      "bento_services": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[300px]",
+      "hero_split": "grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+    },
+    "glassmorphism": {
+      "nav": "backdrop-blur-xl bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50",
+      "card": "backdrop-blur-lg bg-white/50 dark:bg-slate-900/50 border border-white/20 shadow-xl shadow-slate-200/20 dark:shadow-black/20"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 text-lg font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/25",
+      "outline": "border-2 border-slate-200 dark:border-slate-800 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white rounded-full px-8 py-6 text-lg font-medium transition-all"
+    },
+    "cards": {
+      "service": "group relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 transition-all duration-500 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10",
+      "feature": "p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-transparent hover:border-slate-200 transition-colors"
+    },
+    "inputs": {
+      "default": "h-12 rounded-xl border-slate-200 bg-white px-4 text-base focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+    }
+  },
+  "visual_assets": {
+    "images": [
+      {
+        "category": "Hero/About",
+        "url": "https://images.unsplash.com/photo-1758873272809-7947b9a73fe5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjBjcmVhdGl2ZSUyMG9mZmljZSUyMHdvcmtzcGFjZSUyMHRlY2hub2xvZ3klMjB0ZWFtfGVufDB8fHx8MTc3MDkyMDA2Nnww&ixlib=rb-4.1.0&q=85",
+        "description": "Two colleagues collaborating on a laptop, clean office environment",
+        "usage": "About Us section or secondary hero"
+      },
+      {
+        "category": "Web Development",
+        "url": "https://images.unsplash.com/photo-1554306274-f23873d9a26c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZyUyMHNjcmVlbiUyMG1pbmltYWxpc3R8ZW58MHx8fHwxNzcwOTIwMDY3fDA&ixlib=rb-4.1.0&q=85",
+        "description": "MacBook Pro with clean desk setup",
+        "usage": "Web Development Service Card"
+      },
+      {
+        "category": "App Development",
+        "url": "https://images.unsplash.com/photo-1762341119237-98df67c9c3c9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwyfHxtb2JpbGUlMjBhcHAlMjB1aSUyMGRlc2lnbiUyMHBob25lJTIwc2NyZWVufGVufDB8fHx8MTc3MDkyMDA2N3ww&ixlib=rb-4.1.0&q=85",
+        "description": "Hand holding smartphone with health app interface",
+        "usage": "App Development Service Card"
+      },
+      {
+        "category": "Video Editing",
+        "url": "https://images.unsplash.com/photo-1764557175375-9e2bea91530e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA5NTZ8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMGVkaXRpbmclMjBzb2Z0d2FyZSUyMG1vbml0b3IlMjBjcmVhdGl2ZXxlbnwwfHx8fDE3NzA5MjAwNjh8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Video editing software interface on monitor",
+        "usage": "Video Editing Service Card"
+      },
+      {
+        "category": "Branding",
+        "url": "https://images.unsplash.com/photo-1763575648452-282e12a329d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NDh8MHwxfHNlYXJjaHwzfHxza2V0Y2hib29rJTIwY3JlYXRpdmUlMjBkZXNpZ258ZW58MHx8fHwxNzcwOTIwMDg1fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Hands drawing design sketches in sketchbook",
+        "usage": "Branding Service Card"
+      },
+      {
+        "category": "Logo",
+        "url": "https://customer-assets.emergentagent.com/job_tivrox-agency-1/artifacts/2hmmk4xa_logo%20final.png",
+        "description": "Official TIVROX Logo",
+        "usage": "Header and Footer"
+      }
+    ],
+    "icons_library": "lucide-react"
+  },
+  "motion": {
+    "library": "framer-motion",
+    "variants": {
+      "fadeInUp": {
+        "initial": { "opacity": 0, "y": 40 },
+        "animate": { "opacity": 1, "y": 0, "transition": { "duration": 0.5, "ease": "easeOut" } }
+      },
+      "stagger": {
+        "animate": { "transition": { "staggerChildren": 0.1 } }
+      },
+      "scaleIn": {
+        "initial": { "opacity": 0, "scale": 0.9 },
+        "animate": { "opacity": 1, "scale": 1, "transition": { "duration": 0.4 } }
+      }
+    },
+    "scroll": "Use 'lenis' for smooth scrolling momentum"
+  },
+  "accessibility": {
+    "rules": [
+      "Ensure 4.5:1 contrast ratio for normal text",
+      "Use semantic HTML (main, section, article, nav)",
+      "Focus states must be visible (ring-2 ring-primary)",
+      "Alt text mandatory for all images"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Install 'lenis' for smooth scrolling: 'npm install lenis' or 'yarn add lenis'",
+    "Install 'framer-motion' for animations",
+    "Use 'lucide-react' for all icons",
+    "Implement a 'Dark Mode' toggle in the navbar, default to 'System' or 'Light'",
+    "Use the provided image URLs exactly as mapped in 'visual_assets'",
+    "Do not use gradients for backgrounds, use them only for subtle glows or text",
+    "Ensure the Admin Dashboard is protected and uses a clean, dense grid layout (unlike the marketing pages)",
+    "For the 'Why Choose Us' section, use a bento grid layout with mixed cell sizes",
+    "The Booking Form must have conditional logic (e.g., if 'Web Dev' selected, show 'Budget' field)",
+    "Use Sonner for toast notifications",
+    "Ensure all interactive elements have data-testid attributes"
+  ],
+  "universal_guidelines": [
+    "You tend to converge toward generic outputs. Avoid this.",
+    "Dark colors look good when used independently without gradients.",
+    "Don't make generic centered layouts. Create depth.",
+    "Use glass-morphism effects with backdrop filters.",
+    "Every interaction needs micro-animations.",
+    "Use 2-3x more spacing than feels comfortable."
+  ]
+}
