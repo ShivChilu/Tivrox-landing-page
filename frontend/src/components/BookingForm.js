@@ -66,7 +66,13 @@ export default function BookingForm() {
 
     setStatus("loading");
     try {
-      const payload = { ...form };
+      // Get honeypot value from uncontrolled input
+      const honeypotValue = e.target.elements['website_url_company']?.value || '';
+      
+      const payload = { 
+        ...form,
+        company_url: honeypotValue  // Add honeypot value from form element
+      };
       // Clean empty optional fields
       if (!payload.website_type) delete payload.website_type;
       if (!payload.platform) delete payload.platform;
