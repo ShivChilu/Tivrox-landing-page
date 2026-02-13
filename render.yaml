@@ -35,10 +35,7 @@ services:
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_BACKEND_URL
-        fromService:
-          type: web
-          name: tivrox-backend
-          property: url
+        sync: false
     routes:
       - type: rewrite
         source: /*
