@@ -170,6 +170,7 @@ async def create_booking(data: BookingCreate, request: Request):
     await db.bookings.insert_one(booking)
 
     # Send emails (non-blocking) - Plain text only for better deliverability
+    # NOTE: Client confirmation temporarily disabled to test admin email delivery stability first
     try:
         # Admin notification
         admin_text = f"""
@@ -194,28 +195,29 @@ TIVROX Admin Notification
             "text": admin_text
         }
         await asyncio.to_thread(resend.Emails.send, admin_params)
+        logger.info(f"Admin email sent for booking {booking['id']}")
 
-        # Client confirmation
-        client_text = f"""
-Thank you for contacting TIVROX, {booking['full_name']}!
-
-We have received your consultation request.
-Our team is reviewing it and we will respond within 24 hours.
-
-If you have any urgent queries, please reach us at:
-chiluverushivaprasad02@gmail.com
-
-- TIVROX Team
-We Build Scalable Digital Systems
-"""
-        client_params = {
-            "from": SENDER_EMAIL,
-            "to": [booking["email"]],
-            "subject": "Your Consultation Request - TIVROX",
-            "text": client_text
-        }
-        await asyncio.to_thread(resend.Emails.send, client_params)
-        logger.info(f"Emails sent for booking {booking['id']}")
+        # Client confirmation - TEMPORARILY DISABLED for delivery stability testing
+        # client_text = f"""
+# Thank you for contacting TIVROX, {booking['full_name']}!
+# 
+# We have received your consultation request.
+# Our team is reviewing it and we will respond within 24 hours.
+# 
+# If you have any urgent queries, please reach us at:
+# chiluverushivaprasad02@gmail.com
+# 
+# - TIVROX Team
+# We Build Scalable Digital Systems
+# """
+        # client_params = {
+        #     "from": SENDER_EMAIL,
+        #     "to": [booking["email"]],
+        #     "subject": "Your Consultation Request - TIVROX",
+        #     "text": client_text
+        # }
+        # await asyncio.to_thread(resend.Emails.send, client_params)
+        # logger.info(f"Client confirmation sent for booking {booking['id']}")
     except Exception as e:
         logger.error(f"Email sending failed: {str(e)}")
 
