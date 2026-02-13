@@ -28,10 +28,7 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Resend setup
-resend.api_key = os.environ.get('RESEND_API_KEY')
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL')
+# JWT Secret for admin auth
 JWT_SECRET = os.environ.get('JWT_SECRET')
 
 # Rate limiting storage
