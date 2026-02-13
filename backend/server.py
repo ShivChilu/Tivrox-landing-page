@@ -47,7 +47,7 @@ api_router = APIRouter(prefix="/api")
 # ─── Models ───────────────────────────────────────────────
 class BookingCreate(BaseModel):
     full_name: str
-    email: EmailStr
+    email: str
     phone: str
     service: str
     project_deadline: Optional[str] = None
