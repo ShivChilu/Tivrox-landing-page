@@ -146,6 +146,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "RETESTING COMPLETED: Plain text email implementation verified and working perfectly. Created two test bookings (9bd39cda-3d5e-4f5c-aca6-1df2854d7fd6, d15442a6-610e-4e43-9397-23a4d5539eec) successfully. Backend logs confirm 'Emails sent' for both bookings. Email format verified as pure plain text with no HTML, links, or buttons - using 'text' parameter only in Resend API calls. Both admin notifications and client confirmations sent successfully. Email delivery functionality fully tested and validated."
+        - working: true
+          agent: "main"
+          comment: "Client confirmation email TEMPORARILY DISABLED per user request. Now only sending admin notification email to test delivery stability first. Backend logs will show 'Admin email sent for booking {ID}'. Client confirmation code commented out and ready to re-enable once admin email delivery stability is confirmed."
 
   - task: "Honeypot spam protection"
     implemented: true
