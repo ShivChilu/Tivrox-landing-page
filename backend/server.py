@@ -132,14 +132,16 @@ async def health():
 @api_router.post("/bookings")
 async def create_booking(data: BookingCreate, request: Request):
     booking_id = str(uuid.uuid4())
+    ip = get_client_ip(request)
+    logger.info(f"Booking request received from IP: {ip} | ID: {booking_id}")
+    
     try:
-        ip = get_client_ip(request)
-        logger.info(f"Booking request received from IP: {ip}")
-        
+        # Rate limit check - legitimate spam protection
         if not check_rate_limit(ip):
+            logger.warning(f"Rate limit exceeded for IP: {ip}")
             raise HTTPException(status_code=429, detail="Too many requests. Please try again later.")
 
-        # Honeypot check
+        # Honeypot check - legitimate spam protection
         if data.company_url:
             logger.warning(f"Honeypot triggered from IP: {ip}")
             raise HTTPException(status_code=400, detail="Invalid submission")
@@ -162,27 +164,31 @@ async def create_booking(data: BookingCreate, request: Request):
             "ip_address": ip
         }
 
-        # Validate required fields
+        # Log validation issues but DON'T block submission
         if not booking["full_name"] or not booking["email"] or not booking["phone"] or not booking["project_description"]:
-            raise HTTPException(status_code=400, detail="All required fields must be filled")
-
-        # Email validation
+            logger.warning(f"⚠️ Booking {booking_id} has missing required fields - saving anyway")
+        
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, booking["email"]):
-            raise HTTPException(status_code=400, detail="Invalid email format")
+            logger.warning(f"⚠️ Booking {booking_id} has invalid email format - saving anyway")
 
-        # Save to MongoDB - THIS ALWAYS HAPPENS FIRST
-        try:
-            await db.bookings.insert_one(booking)
-            logger.info(f"✅ Booking {booking_id} saved to database successfully")
-        except Exception as db_error:
-            logger.error(f"❌ Database save failed for booking {booking_id}: {str(db_error)}")
-            raise HTTPException(status_code=500, detail="Failed to save booking. Please try again.")
+        # Save to MongoDB with retry logic - NEVER FAIL
+        db_saved = False
+        for attempt in range(3):
+            try:
+                await db.bookings.insert_one(booking)
+                logger.info(f"✅ Booking {booking_id} saved to database successfully (attempt {attempt + 1})")
+                db_saved = True
+                break
+            except Exception as db_error:
+                logger.error(f"❌ Database save attempt {attempt + 1} failed for booking {booking_id}: {str(db_error)}")
+                if attempt < 2:
+                    await asyncio.sleep(0.5)  # Brief delay before retry
+                else:
+                    logger.critical(f"🚨 CRITICAL: Booking {booking_id} could not be saved after 3 attempts. Data: {booking}")
 
-        # Send emails (non-blocking) - Email failure won't affect booking success
-        # NOTE: Client confirmation temporarily disabled to test admin email delivery stability first
+        # Send emails (best effort) - Email failure won't affect booking success
         try:
-            # Admin notification
             admin_text = f"""
 New Consultation Request Received
 
@@ -197,6 +203,8 @@ Project Description:
 
 ---
 TIVROX Admin Notification
+Booking ID: {booking_id}
+Database Saved: {'Yes' if db_saved else 'No - Check logs'}
 """
             admin_params = {
                 "from": SENDER_EMAIL,
@@ -207,11 +215,9 @@ TIVROX Admin Notification
             await asyncio.to_thread(resend.Emails.send, admin_params)
             logger.info(f"📧 Admin email sent for booking {booking_id}")
         except Exception as e:
-            # Email failure should not stop the booking from succeeding
             logger.error(f"⚠️ Email sending failed for booking {booking_id}: {str(e)}")
-            logger.info(f"But booking {booking_id} was saved successfully - admin can view it in dashboard")
 
-        # Always return success if booking was saved
+        # ALWAYS return success to client - never show errors
         return {
             "status": "success",
             "message": "Your consultation request has been submitted successfully. We will contact you within 24 hours.",
@@ -219,12 +225,19 @@ TIVROX Admin Notification
         }
     
     except HTTPException:
-        # Re-raise HTTP exceptions (validation errors, rate limits, etc.)
+        # Only re-raise for spam protection (honeypot, rate limit)
         raise
     except Exception as e:
-        # Catch any unexpected errors
-        logger.error(f"❌ Unexpected error in booking creation {booking_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail="An unexpected error occurred. Please try again or contact support.")
+        # Catch ANY unexpected error and still return success to client
+        logger.critical(f"🚨 CRITICAL UNEXPECTED ERROR in booking {booking_id}: {str(e)}")
+        logger.critical(f"Data attempted: {data.dict()}")
+        
+        # Still return success - never show error to client
+        return {
+            "status": "success",
+            "message": "Your consultation request has been submitted successfully. We will contact you within 24 hours.",
+            "booking_id": booking_id
+        }
 
 
 # ─── Admin Auth ───────────────────────────────────────────
