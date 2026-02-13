@@ -2,7 +2,7 @@ services:
   # Backend Service
   - type: web
     name: tivrox-backend
-    runtime: python
+    env: python
     buildCommand: pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -24,16 +24,3 @@ services:
         value: tivrox
       - key: ADMIN_PASSWORD
         sync: false
-
-  # Frontend Static Site
-  - type: static
-    name: tivrox-frontend
-    buildCommand: cd frontend && yarn install && yarn build
-    staticPublishPath: frontend/build
-    envVars:
-      - key: REACT_APP_BACKEND_URL
-        sync: false
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
