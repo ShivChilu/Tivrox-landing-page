@@ -92,6 +92,85 @@ def check_rate_limit(ip: str) -> bool:
     rate_limit_store[ip].append(now)
     return True
 
+def send_admin_notification(booking: dict):
+    """Send plain text admin notification email"""
+    try:
+        subject = f"New Consultation Request - {booking['service']}"
+        
+        # Plain text email body
+        body = f"""New consultation request received:
+
+Booking ID: {booking['id']}
+Name: {booking['full_name']}
+Email: {booking['email']}
+Phone: {booking['phone']}
+Service: {booking['service']}
+Project Deadline: {booking.get('project_deadline', 'Not specified')}
+Project Description: {booking['project_description']}
+"""
+        
+        # Add service-specific details
+        if booking.get('website_type'):
+            body += f"Website Type: {booking['website_type']}\n"
+        if booking.get('platform'):
+            body += f"Platform: {booking['platform']}\n"
+        if booking.get('video_type'):
+            body += f"Video Type: {booking['video_type']}\n"
+        if booking.get('design_type'):
+            body += f"Design Type: {booking['design_type']}\n"
+        
+        body += f"\nSubmitted at: {booking['created_at']}\nIP Address: {booking.get('ip_address', 'Unknown')}"
+        
+        resend.Emails.send({
+            "from": SENDER_EMAIL,
+            "to": ADMIN_EMAIL,
+            "subject": subject,
+            "text": body
+        })
+        
+        logger.info(f"✉️ Admin notification email sent for booking {booking['id']}")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to send admin email for booking {booking['id']}: {str(e)}")
+        return False
+
+def send_client_confirmation(booking: dict):
+    """Send plain text client confirmation email"""
+    try:
+        subject = "Consultation Request Received - TIVROX"
+        
+        # Plain text email body
+        body = f"""Dear {booking['full_name']},
+
+Thank you for submitting your consultation request for {booking['service']}.
+
+We have received your request and our team will review it shortly. You can expect to hear back from us within 24 hours.
+
+Your Booking Details:
+- Service: {booking['service']}
+- Project Deadline: {booking.get('project_deadline', 'Not specified')}
+- Booking ID: {booking['id']}
+
+If you have any questions or need immediate assistance, please feel free to reach out to us.
+
+Best regards,
+TIVROX Team
+"""
+        
+        resend.Emails.send({
+            "from": SENDER_EMAIL,
+            "to": booking['email'],
+            "subject": subject,
+            "text": body
+        })
+        
+        logger.info(f"✉️ Client confirmation email sent to {booking['email']} for booking {booking['id']}")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to send client email for booking {booking['id']}: {str(e)}")
+        return False
+
+
 def create_jwt(username: str) -> str:
     payload = {
         "sub": username,
