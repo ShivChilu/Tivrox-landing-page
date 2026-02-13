@@ -171,11 +171,14 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "testing"
           comment: "Honeypot field (company_url) correctly detects and rejects spam submissions with 400 status"
+        - working: true
+          agent: "main"
+          comment: "HONEYPOT FIX: Modified condition from 'if data.company_url:' to 'if data.company_url and data.company_url.strip():' to prevent false positives. Now: ✅ Empty string ('') allowed (legitimate submission), ✅ Whitespace-only strings (' ', '\t', '\n') allowed (legitimate submission), ❌ Only real non-empty content triggers spam protection. This fixes the issue where legitimate users were getting blocked due to whitespace in the honeypot field."
 
   - task: "Service options validation"
     implemented: true
