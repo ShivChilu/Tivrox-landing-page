@@ -179,16 +179,22 @@ export default function BookingForm() {
             className="space-y-6 p-8 md:p-10 rounded-2xl bg-white border border-slate-200 shadow-lg"
             data-testid="booking-form"
           >
-            {/* Honeypot - hidden */}
-            <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true">
-              <input
-                tabIndex={-1}
-                name="company_url"
-                value={form.company_url}
-                onChange={(e) => updateField("company_url", e.target.value)}
-                autoComplete="off"
-              />
-            </div>
+            {/* Honeypot - truly hidden, uncontrolled, prevents autofill */}
+            <input
+              type="text"
+              name="website_url_company"
+              tabIndex={-1}
+              autoComplete="new-password"
+              style={{
+                position: 'absolute',
+                left: '-9999px',
+                width: '1px',
+                height: '1px',
+                opacity: 0,
+                pointerEvents: 'none'
+              }}
+              aria-hidden="true"
+            />
 
             {/* Name & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
