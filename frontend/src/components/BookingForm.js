@@ -27,8 +27,8 @@ export default function BookingForm() {
   const [form, setForm] = useState({
     full_name: "", email: "", phone: "", service: "",
     project_deadline: "", project_description: "",
-    website_type: "", platform: "", video_type: "", design_type: "",
-    company_url: "" // honeypot
+    website_type: "", platform: "", video_type: "", design_type: ""
+    // honeypot removed from state - now uncontrolled
   });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
