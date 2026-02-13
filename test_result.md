@@ -200,3 +200,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "Completed comprehensive backend testing for TIVROX consultation booking system. Key findings: 1) Email delivery functionality working correctly with Resend API integration - confirmed via backend logs showing successful email sending. 2) All core booking creation endpoints functional. 3) Spam protection via honeypot working. 4) Minor validation status code difference (422 vs 400) but functionality correct. 5) Email delivery currently restricted to verified address due to Resend testing domain limitations. All critical functionality verified and working."
+    - agent: "main"
+      message: "Applied email delivery optimization fix. Changed email format from HTML with links to plain text only. This improves deliverability when using shared sender domains like onboarding@resend.dev, as many email providers reject emails from shared senders when they contain links. Removed unused HTML template functions. Backend restarted successfully and health check passing. Ready for testing to verify improved email delivery."
