@@ -1,0 +1,45 @@
+services:
+  # Backend Service
+  - type: web
+    name: tivrox-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: tivrox_db
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SENDER_EMAIL
+        value: onboarding@resend.dev
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_USERNAME
+        value: tivrox
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: tivrox-frontend
+    runtime: static
+    plan: free
+    buildCommand: cd frontend && yarn install && yarn build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        fromService:
+          type: web
+          name: tivrox-backend
+          property: url
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
