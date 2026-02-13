@@ -268,6 +268,22 @@ async def create_booking(data: BookingCreate, request: Request):
         # Log the booking details for admin review
         if db_saved:
             logger.info(f"📋 New booking: {booking['full_name']} | {booking['email']} | {booking['service']}")
+            
+            # Send email notifications (don't fail if emails fail)
+            try:
+                admin_sent = send_admin_notification(booking)
+                client_sent = send_client_confirmation(booking)
+                
+                if admin_sent and client_sent:
+                    logger.info(f"📧 Both emails sent successfully for booking {booking_id}")
+                elif admin_sent:
+                    logger.warning(f"⚠️ Only admin email sent for booking {booking_id}")
+                elif client_sent:
+                    logger.warning(f"⚠️ Only client email sent for booking {booking_id}")
+                else:
+                    logger.error(f"❌ Both emails failed for booking {booking_id}")
+            except Exception as email_error:
+                logger.error(f"❌ Email sending error for booking {booking_id}: {str(email_error)}")
         else:
             logger.critical(f"🚨 FAILED BOOKING: {booking['full_name']} | {booking['email']} | {booking['service']}")
 
