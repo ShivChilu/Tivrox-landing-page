@@ -135,11 +135,14 @@ backend:
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "testing"
           comment: "POST /api/bookings working correctly. Successfully created booking with ID 412a85db-a82b-4c8f-90f8-8cefedf92ee2. Email sending confirmed via backend logs 'Emails sent for booking 412a85db-a82b-4c8f-90f8-8cefedf92ee2'. Both admin notification and client confirmation emails sent successfully via Resend API. NOTE: Email delivery limited to verified address (chiluverushivaprasad02@gmail.com) due to Resend testing restrictions."
+        - working: true
+          agent: "main"
+          comment: "Email delivery optimized for better deliverability. Converted from HTML to plain text format without links or buttons. This addresses email rejection issues with shared sender domains (onboarding@resend.dev). Admin and client emails now send as plain text only, which increases delivery success rates with email providers that block shared sender emails containing links."
 
   - task: "Honeypot spam protection"
     implemented: true
