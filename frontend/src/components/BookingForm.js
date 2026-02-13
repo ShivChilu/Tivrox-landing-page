@@ -74,7 +74,17 @@ export default function BookingForm() {
       if (!payload.design_type) delete payload.design_type;
       if (!payload.project_deadline) delete payload.project_deadline;
 
-      await axios.post(`${API}/bookings`, payload);
+      console.log("Submitting to:", `${API}/bookings`);
+      console.log("Payload:", payload);
+      
+      const response = await axios.post(`${API}/bookings`, payload, {
+        timeout: 10000, // 10 second timeout
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("Response:", response.data);
       setStatus("success");
       toast.success("Consultation request submitted successfully!");
       setForm({
@@ -84,8 +94,28 @@ export default function BookingForm() {
         company_url: ""
       });
     } catch (err) {
+      console.error("Submission error:", err);
+      console.error("Error response:", err.response);
+      console.error("Error message:", err.message);
+      
       setStatus("error");
-      const msg = err.response?.data?.detail || "Something went wrong. Please try again.";
+      
+      // Better error handling
+      let msg = "Something went wrong. Please try again.";
+      if (err.response) {
+        // Server responded with error
+        msg = err.response.data?.detail || err.response.data?.message || msg;
+        console.error("Server error status:", err.response.status);
+      } else if (err.request) {
+        // Request made but no response
+        msg = "Unable to reach server. Please check your connection.";
+        console.error("No response received");
+      } else {
+        // Error in request setup
+        msg = "Request failed. Please try again.";
+        console.error("Request setup error:", err.message);
+      }
+      
       toast.error(msg);
     }
   };
