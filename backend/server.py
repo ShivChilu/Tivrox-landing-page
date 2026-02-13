@@ -134,7 +134,8 @@ async def create_booking(data: BookingCreate, request: Request):
             raise HTTPException(status_code=429, detail="Too many requests. Please try again later.")
 
         # Honeypot check - legitimate spam protection
-        if data.company_url:
+        # Only block if field has actual content (not just whitespace)
+        if data.company_url and data.company_url.strip():
             logger.warning(f"Honeypot triggered from IP: {ip}")
             raise HTTPException(status_code=400, detail="Invalid submission")
 
