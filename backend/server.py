@@ -110,10 +110,6 @@ async def get_current_admin(request: Request):
     return verify_jwt(token)
 
 
-# ─── Email Configuration ─────────────────────────────────
-# Note: Using plain text emails for better deliverability with shared sender domains
-
-
 # ─── Routes ───────────────────────────────────────────────
 @api_router.get("/")
 async def root():
