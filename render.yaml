@@ -3,7 +3,6 @@ services:
   - type: web
     name: tivrox-backend
     runtime: python
-    plan: free
     buildCommand: pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -27,10 +26,8 @@ services:
         sync: false
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: tivrox-frontend
-    runtime: static
-    plan: free
     buildCommand: cd frontend && yarn install && yarn build
     staticPublishPath: frontend/build
     envVars:
