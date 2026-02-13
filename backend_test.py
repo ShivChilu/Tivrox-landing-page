@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BASE_URL = "https://plain-text-mail.preview.emergentagent.com/api"
+BASE_URL = "https://form-submit-debug.preview.emergentagent.com/api"
 TEST_EMAIL = "chiluverushivaprasad02@gmail.com"
 
 def test_health_endpoints():
