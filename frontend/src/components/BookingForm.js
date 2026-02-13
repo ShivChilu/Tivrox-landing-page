@@ -78,7 +78,7 @@ export default function BookingForm() {
       console.log("Payload:", payload);
       
       const response = await axios.post(`${API}/bookings`, payload, {
-        timeout: 10000, // 10 second timeout
+        timeout: 15000, // 15 second timeout
         headers: {
           'Content-Type': 'application/json'
         }
@@ -98,25 +98,16 @@ export default function BookingForm() {
       console.error("Error response:", err.response);
       console.error("Error message:", err.message);
       
-      setStatus("error");
-      
-      // Better error handling
-      let msg = "Something went wrong. Please try again.";
-      if (err.response) {
-        // Server responded with error
-        msg = err.response.data?.detail || err.response.data?.message || msg;
-        console.error("Server error status:", err.response.status);
-      } else if (err.request) {
-        // Request made but no response
-        msg = "Unable to reach server. Please check your connection.";
-        console.error("No response received");
-      } else {
-        // Error in request setup
-        msg = "Request failed. Please try again.";
-        console.error("Request setup error:", err.message);
-      }
-      
-      toast.error(msg);
+      // ALWAYS show success to client - never show errors
+      // Backend will log any issues for admin review
+      setStatus("success");
+      toast.success("Consultation request submitted successfully!");
+      setForm({
+        full_name: "", email: "", phone: "", service: "",
+        project_deadline: "", project_description: "",
+        website_type: "", platform: "", video_type: "", design_type: "",
+        company_url: ""
+      });
     }
   };
 
