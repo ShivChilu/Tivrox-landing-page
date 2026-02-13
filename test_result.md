@@ -149,6 +149,12 @@ backend:
         - working: true
           agent: "main"
           comment: "Client confirmation email TEMPORARILY DISABLED per user request. Now only sending admin notification email to test delivery stability first. Backend logs will show 'Admin email sent for booking {ID}'. Client confirmation code commented out and ready to re-enable once admin email delivery stability is confirmed."
+        - working: false
+          agent: "user"
+          comment: "USER REPORTED: Clients filling the form are getting 'Something went wrong. Please try again or email us directly.' error and 'invalid credentials' popup. When agent tests it works, but when clients fill the form it fails."
+        - working: true
+          agent: "main"
+          comment: "CRITICAL BUG FIXED: Backend was crashing due to dependency version conflicts. Root cause: 1) pydantic 2.10.3 incompatible with pydantic_core 2.41.5 - fixed by installing pydantic-core==2.27.1, 2) motor 3.6.0 required pymongo>=4.9 but had 4.5.0 - fixed by reinstalling motor which updated pymongo to 4.9.2, 3) bleach library missing webencodings dependency - installed webencodings==0.5.1. All dependencies now compatible. Backend successfully started and responding to health checks and booking submissions. Updated requirements.txt to pin compatible versions. This explains why it worked during testing (backend temporarily up) but failed for clients (backend crashed shortly after)."
 
   - task: "Honeypot spam protection"
     implemented: true
