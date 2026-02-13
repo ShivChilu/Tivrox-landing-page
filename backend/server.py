@@ -209,23 +209,50 @@ async def create_booking(data: BookingCreate, request: Request):
     # Save to MongoDB
     await db.bookings.insert_one(booking)
 
-    # Send emails (non-blocking)
+    # Send emails (non-blocking) - Plain text only for better deliverability
     try:
         # Admin notification
+        admin_text = f"""
+New Consultation Request Received
+
+Name: {booking['full_name']}
+Email: {booking['email']}
+Phone: {booking['phone']}
+Service: {booking['service']}
+Deadline: {booking.get('project_deadline', 'Not specified')}
+
+Project Description:
+{booking['project_description']}
+
+---
+TIVROX Admin Notification
+"""
         admin_params = {
             "from": SENDER_EMAIL,
             "to": [ADMIN_EMAIL],
             "subject": f"New Consultation Request - {booking['full_name']}",
-            "html": admin_notification_html(booking)
+            "text": admin_text
         }
         await asyncio.to_thread(resend.Emails.send, admin_params)
 
         # Client confirmation
+        client_text = f"""
+Thank you for contacting TIVROX, {booking['full_name']}!
+
+We have received your consultation request.
+Our team is reviewing it and we will respond within 24 hours.
+
+If you have any urgent queries, please reach us at:
+chiluverushivaprasad02@gmail.com
+
+- TIVROX Team
+We Build Scalable Digital Systems
+"""
         client_params = {
             "from": SENDER_EMAIL,
             "to": [booking["email"]],
             "subject": "Your Consultation Request - TIVROX",
-            "html": client_confirmation_html(booking["full_name"])
+            "text": client_text
         }
         await asyncio.to_thread(resend.Emails.send, client_params)
         logger.info(f"Emails sent for booking {booking['id']}")
