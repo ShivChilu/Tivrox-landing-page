@@ -10,7 +10,7 @@ from datetime import datetime
 import os
 
 # Test configuration
-BACKEND_URL = "https://boring-chaplygin-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://honeypot-fix.preview.emergentagent.com/api"
 
 def test_booking_submission_review_request():
     """
