@@ -96,8 +96,7 @@ export default function BookingForm() {
       setForm({
         full_name: "", email: "", phone: "", service: "",
         project_deadline: "", project_description: "",
-        website_type: "", platform: "", video_type: "", design_type: "",
-        company_url: ""
+        website_type: "", platform: "", video_type: "", design_type: ""
       });
     } catch (err) {
       console.error("Submission error:", err);
@@ -111,8 +110,7 @@ export default function BookingForm() {
       setForm({
         full_name: "", email: "", phone: "", service: "",
         project_deadline: "", project_description: "",
-        website_type: "", platform: "", video_type: "", design_type: "",
-        company_url: ""
+        website_type: "", platform: "", video_type: "", design_type: ""
       });
     }
   };
