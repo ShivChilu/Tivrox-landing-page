@@ -161,6 +161,9 @@ backend:
         - working: true
           agent: "main"
           comment: "FAIL-SAFE IMPLEMENTATION: Backend and frontend updated to NEVER show errors to clients. Changes: 1) Backend - removed validation errors (400), added 3-retry DB save logic, always returns success even on failures, logs all issues internally for admin review. 2) Frontend - removed error state/messages, always shows success toast, removed error display. 3) Only spam protection (honeypot, rate limit) still blocks submissions. Result: Clients always get positive feedback, data always saved to DB (with retries), all failures logged silently for admin. This ensures better UX - clients never see technical errors."
+        - working: true
+          agent: "main"
+          comment: "EMAIL REMOVED: Per user request, completely removed Resend email integration. Changes: 1) Removed all email sending code from backend. 2) Removed resend and email-validator from requirements.txt. 3) Removed resend imports and EmailStr validation. 4) Simplified booking endpoint - now only saves to database. 5) Enhanced logging with booking details for admin review in logs. Result: System now focuses purely on database saving without email complications. Bookings save successfully and admin can view all data in admin panel. Logs show: '📋 New booking: {name} | {email} | {service}' for easy monitoring."
 
   - task: "Honeypot spam protection"
     implemented: true
