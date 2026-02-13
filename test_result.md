@@ -192,7 +192,6 @@ metadata:
 test_plan:
   current_focus:
     - "Booking creation with email sending"
-    - "Input validation for required fields and email format"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
