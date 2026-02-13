@@ -114,48 +114,8 @@ async def get_current_admin(request: Request):
     return verify_jwt(token)
 
 
-# ─── Email Templates ─────────────────────────────────────
-def admin_notification_html(booking: dict) -> str:
-    return f"""
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
-        <div style="background: #2563eb; padding: 24px; border-radius: 8px 8px 0 0; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New Consultation Request</h1>
-        </div>
-        <div style="background: #ffffff; padding: 32px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b; width: 140px;">Name</td><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #0f172a;">{booking['full_name']}</td></tr>
-                <tr><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b;">Email</td><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{booking['email']}</td></tr>
-                <tr><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b;">Phone</td><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{booking['phone']}</td></tr>
-                <tr><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b;">Service</td><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #2563eb; font-weight: 600;">{booking['service']}</td></tr>
-                <tr><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b;">Deadline</td><td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a;">{booking.get('project_deadline', 'Not specified')}</td></tr>
-                <tr><td style="padding: 12px 0; color: #64748b; vertical-align: top;">Description</td><td style="padding: 12px 0; color: #0f172a;">{booking['project_description']}</td></tr>
-            </table>
-        </div>
-        <p style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 24px;">TIVROX Admin Notification</p>
-    </div>
-    """
-
-def client_confirmation_html(name: str) -> str:
-    return f"""
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
-        <div style="background: #2563eb; padding: 24px; border-radius: 8px 8px 0 0; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">TIVROX</h1>
-        </div>
-        <div style="background: #ffffff; padding: 40px 32px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; text-align: center;">
-            <h2 style="color: #0f172a; margin: 0 0 16px 0; font-size: 22px;">Thank You, {name}!</h2>
-            <p style="color: #64748b; line-height: 1.8; font-size: 16px; margin: 0 0 24px 0;">
-                We have received your consultation request and our team is reviewing it. We will respond within <strong style="color: #2563eb;">24 hours</strong>.
-            </p>
-            <div style="background: #f1f5f9; border-radius: 8px; padding: 20px; margin: 24px 0;">
-                <p style="color: #0f172a; margin: 0; font-size: 14px;">
-                    If you have any urgent queries, feel free to reach us at<br/>
-                    <a href="mailto:chiluverushivaprasad02@gmail.com" style="color: #2563eb; text-decoration: none; font-weight: 600;">chiluverushivaprasad02@gmail.com</a>
-                </p>
-            </div>
-            <p style="color: #94a3b8; font-size: 13px; margin: 24px 0 0 0;">We Build Scalable Digital Systems.</p>
-        </div>
-    </div>
-    """
+# ─── Email Configuration ─────────────────────────────────
+# Note: Using plain text emails for better deliverability with shared sender domains
 
 
 # ─── Routes ───────────────────────────────────────────────
