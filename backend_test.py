@@ -10,7 +10,7 @@ from datetime import datetime
 import os
 
 # Test configuration
-BACKEND_URL = "https://form-submit-debug.preview.emergentagent.com/api"
+BACKEND_URL = "https://seamless-submit.preview.emergentagent.com/api"
 
 def test_booking_submission():
     """

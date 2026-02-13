@@ -147,7 +147,7 @@ When you push and deploy:
 
 2. ✅ **No environment variable changes needed**
    - All `.env` files are correctly configured
-   - Backend URL: `https://form-submit-debug.preview.emergentagent.com`
+   - Backend URL: `https://seamless-submit.preview.emergentagent.com`
    - Database: MongoDB Atlas connection working
    - Resend API: Configured and working
 
@@ -182,7 +182,7 @@ When you push and deploy:
 ### Frontend (Browser Console):
 When a submission happens, you'll see:
 ```
-Submitting to: https://form-submit-debug.preview.emergentagent.com/api/bookings
+Submitting to: https://seamless-submit.preview.emergentagent.com/api/bookings
 Payload: {full_name: "...", email: "...", ...}
 Response: {status: "success", booking_id: "...", ...}
 ```
