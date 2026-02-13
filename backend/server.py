@@ -12,7 +12,7 @@ import csv
 import re
 import time
 from pathlib import Path
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime, timezone
 from collections import defaultdict
