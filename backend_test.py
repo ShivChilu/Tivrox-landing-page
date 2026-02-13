@@ -11,7 +11,7 @@ import time
 from typing import Dict, Any
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://plain-text-emails.preview.emergentagent.com/api"
+BACKEND_URL = "https://plain-text-mail.preview.emergentagent.com/api"
 
 class TivroxAPITester:
     def __init__(self):

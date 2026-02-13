@@ -7,7 +7,7 @@ import requests
 import json
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://plain-text-emails.preview.emergentagent.com/api"
+BACKEND_URL = "https://plain-text-mail.preview.emergentagent.com/api"
 
 def test_email_with_verified_address():
     """Test booking creation with verified email address to confirm email sending"""
