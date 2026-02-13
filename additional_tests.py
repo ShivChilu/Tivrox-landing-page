@@ -5,7 +5,7 @@ Additional Test: Error Handling Verification
 import requests
 import json
 
-BACKEND_URL = "https://seamless-submit.preview.emergentagent.com/api"
+BACKEND_URL = "https://boring-chaplygin-2.preview.emergentagent.com/api"
 
 def test_validation_errors():
     """Test that validation still works properly"""
