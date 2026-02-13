@@ -352,12 +352,6 @@ export default function BookingForm() {
                 </>
               )}
             </Button>
-
-            {status === "error" && (
-              <p className="text-center text-sm text-red-500" data-testid="form-error-message">
-                Something went wrong. Please try again or email us directly.
-              </p>
-            )}
           </motion.form>
         </div>
       </div>
