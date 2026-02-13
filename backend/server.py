@@ -131,49 +131,59 @@ async def health():
 # ─── Booking Submission ───────────────────────────────────
 @api_router.post("/bookings")
 async def create_booking(data: BookingCreate, request: Request):
-    ip = get_client_ip(request)
-    if not check_rate_limit(ip):
-        raise HTTPException(status_code=429, detail="Too many requests. Please try again later.")
-
-    # Honeypot check
-    if data.company_url:
-        raise HTTPException(status_code=400, detail="Invalid submission")
-
-    # Sanitize inputs
-    booking = {
-        "id": str(uuid.uuid4()),
-        "full_name": sanitize(data.full_name),
-        "email": sanitize(data.email),
-        "phone": sanitize(data.phone),
-        "service": sanitize(data.service),
-        "project_deadline": sanitize(data.project_deadline) if data.project_deadline else None,
-        "project_description": sanitize(data.project_description),
-        "website_type": sanitize(data.website_type) if data.website_type else None,
-        "platform": sanitize(data.platform) if data.platform else None,
-        "video_type": sanitize(data.video_type) if data.video_type else None,
-        "design_type": sanitize(data.design_type) if data.design_type else None,
-        "status": "New",
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "ip_address": ip
-    }
-
-    # Validate required fields
-    if not booking["full_name"] or not booking["email"] or not booking["phone"] or not booking["project_description"]:
-        raise HTTPException(status_code=400, detail="All required fields must be filled")
-
-    # Email validation
-    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    if not re.match(email_regex, booking["email"]):
-        raise HTTPException(status_code=400, detail="Invalid email format")
-
-    # Save to MongoDB
-    await db.bookings.insert_one(booking)
-
-    # Send emails (non-blocking) - Plain text only for better deliverability
-    # NOTE: Client confirmation temporarily disabled to test admin email delivery stability first
+    booking_id = str(uuid.uuid4())
     try:
-        # Admin notification
-        admin_text = f"""
+        ip = get_client_ip(request)
+        logger.info(f"Booking request received from IP: {ip}")
+        
+        if not check_rate_limit(ip):
+            raise HTTPException(status_code=429, detail="Too many requests. Please try again later.")
+
+        # Honeypot check
+        if data.company_url:
+            logger.warning(f"Honeypot triggered from IP: {ip}")
+            raise HTTPException(status_code=400, detail="Invalid submission")
+
+        # Sanitize inputs
+        booking = {
+            "id": booking_id,
+            "full_name": sanitize(data.full_name),
+            "email": sanitize(data.email),
+            "phone": sanitize(data.phone),
+            "service": sanitize(data.service),
+            "project_deadline": sanitize(data.project_deadline) if data.project_deadline else None,
+            "project_description": sanitize(data.project_description),
+            "website_type": sanitize(data.website_type) if data.website_type else None,
+            "platform": sanitize(data.platform) if data.platform else None,
+            "video_type": sanitize(data.video_type) if data.video_type else None,
+            "design_type": sanitize(data.design_type) if data.design_type else None,
+            "status": "New",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "ip_address": ip
+        }
+
+        # Validate required fields
+        if not booking["full_name"] or not booking["email"] or not booking["phone"] or not booking["project_description"]:
+            raise HTTPException(status_code=400, detail="All required fields must be filled")
+
+        # Email validation
+        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_regex, booking["email"]):
+            raise HTTPException(status_code=400, detail="Invalid email format")
+
+        # Save to MongoDB - THIS ALWAYS HAPPENS FIRST
+        try:
+            await db.bookings.insert_one(booking)
+            logger.info(f"✅ Booking {booking_id} saved to database successfully")
+        except Exception as db_error:
+            logger.error(f"❌ Database save failed for booking {booking_id}: {str(db_error)}")
+            raise HTTPException(status_code=500, detail="Failed to save booking. Please try again.")
+
+        # Send emails (non-blocking) - Email failure won't affect booking success
+        # NOTE: Client confirmation temporarily disabled to test admin email delivery stability first
+        try:
+            # Admin notification
+            admin_text = f"""
 New Consultation Request Received
 
 Name: {booking['full_name']}
@@ -188,44 +198,33 @@ Project Description:
 ---
 TIVROX Admin Notification
 """
-        admin_params = {
-            "from": SENDER_EMAIL,
-            "to": [ADMIN_EMAIL],
-            "subject": f"New Consultation Request - {booking['full_name']}",
-            "text": admin_text
+            admin_params = {
+                "from": SENDER_EMAIL,
+                "to": [ADMIN_EMAIL],
+                "subject": f"New Consultation Request - {booking['full_name']}",
+                "text": admin_text
+            }
+            await asyncio.to_thread(resend.Emails.send, admin_params)
+            logger.info(f"📧 Admin email sent for booking {booking_id}")
+        except Exception as e:
+            # Email failure should not stop the booking from succeeding
+            logger.error(f"⚠️ Email sending failed for booking {booking_id}: {str(e)}")
+            logger.info(f"But booking {booking_id} was saved successfully - admin can view it in dashboard")
+
+        # Always return success if booking was saved
+        return {
+            "status": "success",
+            "message": "Your consultation request has been submitted successfully. We will contact you within 24 hours.",
+            "booking_id": booking_id
         }
-        await asyncio.to_thread(resend.Emails.send, admin_params)
-        logger.info(f"Admin email sent for booking {booking['id']}")
-
-        # Client confirmation - TEMPORARILY DISABLED for delivery stability testing
-        # client_text = f"""
-# Thank you for contacting TIVROX, {booking['full_name']}!
-# 
-# We have received your consultation request.
-# Our team is reviewing it and we will respond within 24 hours.
-# 
-# If you have any urgent queries, please reach us at:
-# chiluverushivaprasad02@gmail.com
-# 
-# - TIVROX Team
-# We Build Scalable Digital Systems
-# """
-        # client_params = {
-        #     "from": SENDER_EMAIL,
-        #     "to": [booking["email"]],
-        #     "subject": "Your Consultation Request - TIVROX",
-        #     "text": client_text
-        # }
-        # await asyncio.to_thread(resend.Emails.send, client_params)
-        # logger.info(f"Client confirmation sent for booking {booking['id']}")
+    
+    except HTTPException:
+        # Re-raise HTTP exceptions (validation errors, rate limits, etc.)
+        raise
     except Exception as e:
-        logger.error(f"Email sending failed: {str(e)}")
-
-    return {
-        "status": "success",
-        "message": "Your consultation request has been submitted successfully. We will contact you within 24 hours.",
-        "booking_id": booking["id"]
-    }
+        # Catch any unexpected errors
+        logger.error(f"❌ Unexpected error in booking creation {booking_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred. Please try again or contact support.")
 
 
 # ─── Admin Auth ───────────────────────────────────────────
