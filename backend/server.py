@@ -19,6 +19,7 @@ from collections import defaultdict
 import bcrypt
 import jwt
 import bleach
+import resend
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -30,6 +31,11 @@ db = client[os.environ['DB_NAME']]
 
 # JWT Secret for admin auth
 JWT_SECRET = os.environ.get('JWT_SECRET')
+
+# Resend configuration
+resend.api_key = os.environ.get('RESEND_API_KEY')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'chiluverushivaprasad02@gmail.com')
 
 # Rate limiting storage
 rate_limit_store = defaultdict(list)
