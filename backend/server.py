@@ -179,35 +179,11 @@ async def create_booking(data: BookingCreate, request: Request):
                 else:
                     logger.critical(f"🚨 CRITICAL: Booking {booking_id} could not be saved after 3 attempts. Data: {booking}")
 
-        # Send emails (best effort) - Email failure won't affect booking success
-        try:
-            admin_text = f"""
-New Consultation Request Received
-
-Name: {booking['full_name']}
-Email: {booking['email']}
-Phone: {booking['phone']}
-Service: {booking['service']}
-Deadline: {booking.get('project_deadline', 'Not specified')}
-
-Project Description:
-{booking['project_description']}
-
----
-TIVROX Admin Notification
-Booking ID: {booking_id}
-Database Saved: {'Yes' if db_saved else 'No - Check logs'}
-"""
-            admin_params = {
-                "from": SENDER_EMAIL,
-                "to": [ADMIN_EMAIL],
-                "subject": f"New Consultation Request - {booking['full_name']}",
-                "text": admin_text
-            }
-            await asyncio.to_thread(resend.Emails.send, admin_params)
-            logger.info(f"📧 Admin email sent for booking {booking_id}")
-        except Exception as e:
-            logger.error(f"⚠️ Email sending failed for booking {booking_id}: {str(e)}")
+        # Log the booking details for admin review
+        if db_saved:
+            logger.info(f"📋 New booking: {booking['full_name']} | {booking['email']} | {booking['service']}")
+        else:
+            logger.critical(f"🚨 FAILED BOOKING: {booking['full_name']} | {booking['email']} | {booking['service']}")
 
         # ALWAYS return success to client - never show errors
         return {
